@@ -1,7 +1,7 @@
 services:
 
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana:12.1
     container_name: grafana
     user: 1000:1000
     expose: 
@@ -17,7 +17,7 @@ services:
       - traefik.http.services.grafana.loadbalancer.server.port=3000
   
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v3.7.3
     container_name: prometheus
     user: 1000:1000
     expose:
