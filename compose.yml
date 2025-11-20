@@ -1,0 +1,65 @@
+services:
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    user: 1000:1000
+    expose: 
+      - 3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.grafana.rule=Host(`grafana.localhost`)
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    user: 1000:1000
+    expose:
+      - 9090
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./data/prometheus:/prometheus
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+
+  loki:
+    image: grafana/loki:2.8.2
+    container_name: loki
+    expose:
+      - 3100
+    command:
+      - '-config.file=/etc/loki/local-config.yaml'
+    volumes:
+      - ./data/loki:/loki
+      - ./config/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
+    restart: unless-stopped
+
+  traefik:
+    image: traefik:3.6
+    container_name: traefik
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ./logs/traefik:/var/log
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.traefik.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.traefik.service=api@internal
+
+networks:
+  default:
+    driver: bridge
+    name: grafana_net

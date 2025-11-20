@@ -1,0 +1,29 @@
+[global]
+  checkNewVersion = false
+  sendAnonymousUsage = false
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+
+
+[log]
+  level = "INFO" # DEBUG, INFO, ERROR
+  format = "common"
+
+[accessLog]
+  filePath = "/var/log/access.log"
+  format = "common"
+
+[api]
+  dashboard = true
+  insecure = true
+
+[providers]
+  [providers.docker]
+    exposedByDefault = true
+  
+  # Read the dynamic config
+  # [providers.file]
+  #   directory = "/providers/"
+  #   watch = true
