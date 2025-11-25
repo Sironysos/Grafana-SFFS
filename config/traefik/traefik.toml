@@ -27,3 +27,10 @@
   # [providers.file]
   #   directory = "/providers/"
   #   watch = true
+
+[tracing]
+  addInternals = true
+
+  [tracing.otlp]
+    [tracing.otlp.http]
+      endpoint = "http://tempo:3200/"

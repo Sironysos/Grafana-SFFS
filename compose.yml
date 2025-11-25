@@ -45,6 +45,18 @@ services:
       - ./config/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
     restart: unless-stopped
 
+  tempo:
+    image: grafana/tempo:2.8.2
+    container_name: tempo
+    expose:
+      - 3200
+    command:
+      - '-config.file=/etc/tempo/local-config.yaml'
+    volumes:
+      - ./data/tempo:/var/tempo
+      - ./config/tempo/local-config.yaml:/etc/tempo/local-config.yaml:ro
+    restart: unless-stopped
+
   postgresql:
     image: postgres:15
     container_name: postgresql
