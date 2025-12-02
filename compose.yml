@@ -74,9 +74,15 @@ services:
       - ./config/postgresql:/docker-entrypoint-initdb.d
     restart: unless-stopped
 
-  alloy:
-    image: grafana/alloy:v1.11.3
-    container_name: alloy_sffs_312
+  promtail:
+    image: grafana/promtail:3.5.8
+    container_name: promtail_sffs_312
+    volumes:
+      - ./logs:/var/log:ro
+      - ./config/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+    command:
+      - '-config.file=/etc/promtail/promtail-config.yaml'
+    restart: unless-stopped
     
 
   traefik:
