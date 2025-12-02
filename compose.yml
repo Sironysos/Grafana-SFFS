@@ -48,17 +48,17 @@ services:
       - traefik.http.routers.loki.rule=Host(`loki.localhost`)
       - traefik.http.services.loki.loadbalancer.server.port=3100
 
-  tempo:
-    image: grafana/tempo:2.8.2
-    container_name: tempo_sffs_312
-    expose:
-      - 3200
-    command:
-      - '-config.file=/etc/tempo/local-config.yaml'
-    volumes:
-      - ./data/tempo:/var/tempo
-      - ./config/tempo/local-config.yaml:/etc/tempo/local-config.yaml:ro
-    restart: unless-stopped
+  # tempo:
+  #   image: grafana/tempo:2.8.2
+  #   container_name: tempo_sffs_312
+  #   expose:
+  #     - 3200
+  #   command:
+  #     - '-config.file=/etc/tempo/local-config.yaml'
+  #   volumes:
+  #     - ./data/tempo:/var/tempo
+  #     - ./config/tempo/local-config.yaml:/etc/tempo/local-config.yaml:ro
+  #   restart: unless-stopped
 
   postgresql:
     image: postgres:15
@@ -80,6 +80,8 @@ services:
     volumes:
       - ./logs:/var/log:ro
       - ./config/promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+    expose:
+      - 9080
     command:
       - '-config.file=/etc/promtail/promtail-config.yaml'
     restart: unless-stopped
