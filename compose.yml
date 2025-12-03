@@ -105,7 +105,6 @@ services:
     container_name: traefik_sffs_312
     ports:
       - 80:80
-      - 5432:5432
     expose:
       - 8181
     volumes:
